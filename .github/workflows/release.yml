@@ -1,0 +1,41 @@
+name: Build and publish CentOS 7 kit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/release.yml]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: opencode-centos7-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build pinned bundle
+        run: python3 scripts/build_bundle.py
+      - name: Verify launcher and configuration
+        run: python3 scripts/verify_bundle.py dist/opencode-centos7-1.19.0-r1.tar.gz
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: v1.19.0-centos7.1
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release already exists; keeping its original assets."
+            exit 0
+          fi
+          gh release create "$RELEASE_TAG" \
+            dist/opencode-centos7-1.19.0-r1.tar.gz \
+            dist/opencode-centos7-1.19.0-r1.tar.gz.sha256 \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "OpenCode 1.19.0 on CentOS 7 - handoff r1" \
+            --notes-file docs/RELEASE_NOTES.md

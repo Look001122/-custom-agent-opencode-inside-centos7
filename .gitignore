@@ -1,0 +1,12 @@
+dist/
+.cache/
+__pycache__/
+*.pyc
+*.tar.gz
+*.apk
+*.env
+.env
+auth.json
+state.json
+config/local*.json
+config/local*.jsonc

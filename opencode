@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+if [ "$(uname -s)" != Linux ] || [ "$(uname -m)" != x86_64 ]; then
+  echo 'This package requires Linux x86_64.' >&2
+  exit 2
+fi
+# Keep Cadence's library overrides out of this process and its children.
+unset LD_LIBRARY_PATH LD_PRELOAD
+export OPENCODE_DISABLE_AUTOUPDATE=true
+# Older terminals can mis-detect the OSC 66 explicit-width protocol.
+export OPENTUI_FORCE_EXPLICIT_WIDTH="${OPENTUI_FORCE_EXPLICIT_WIDTH:-0}"
+exec "$ROOT/runtime/ld-musl-x86_64.so.1" \
+  --library-path "$ROOT/runtime" "$ROOT/bin/opencode" "$@"

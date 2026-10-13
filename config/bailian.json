@@ -1,0 +1,23 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "bailian/deepseek-v4.1-flash",
+  "small_model": "bailian/deepseek-v4.1-flash",
+  "enabled_providers": ["bailian"],
+  "provider": {
+    "bailian": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Alibaba Bailian",
+      "options": {
+        "baseURL": "{env:BAILIAN_BASE_URL}",
+        "apiKey": "{env:DASHSCOPE_API_KEY}"
+      },
+      "models": {
+        "deepseek-v4.1-flash": {
+          "name": "DeepSeek V4.1 Flash (Bailian)",
+          "reasoning": true,
+          "tool_call": true
+        }
+      }
+    }
+  }
+}

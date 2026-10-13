@@ -1,0 +1,56 @@
+{
+  "upstream_version": "1.19.0",
+  "package_revision": "r1",
+  "sources": [
+    {
+      "name": "opencode",
+      "version": "1.19.0",
+      "url": "https://github.com/anomalyco/opencode/releases/download/v1.19.0/opencode-linux-x64-musl.tar.gz",
+      "sha256": "043193a55bcb67c524426132870ab7f960da664ad20a5327e8e03730ef14a869",
+      "archive": "tar.gz",
+      "source_url": "https://github.com/anomalyco/opencode/tree/v1.19.0"
+    },
+    {
+      "name": "musl",
+      "version": "1.2.5-r12",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/musl-1.2.5-r12.apk",
+      "sha256": "4990a5e0ba312e478f94cfe431a70efef1538004eb361c8ae424516848be45bb",
+      "archive": "apk",
+      "files": [
+        "ld-musl-x86_64.so.1"
+      ],
+      "license": "MIT",
+      "alpine_commit": "1546f29a1fd233db15464ce000b6247ed71b31e7",
+      "source_recipe": "https://github.com/alpinelinux/aports/tree/1546f29a1fd233db15464ce000b6247ed71b31e7/main/musl",
+      "source_url": "https://musl.libc.org/releases/musl-1.2.5.tar.gz"
+    },
+    {
+      "name": "libgcc",
+      "version": "14.2.0-r6",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libgcc-14.2.0-r6.apk",
+      "sha256": "04f3467bc967e705221a843fe4d3de5850db826e571686e0c0ed453d38cb5c59",
+      "archive": "apk",
+      "files": [
+        "libgcc_s.so.1"
+      ],
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later",
+      "alpine_commit": "fbf60319be3bbaf6dd32ef55cc6fb7189e05c266",
+      "source_recipe": "https://github.com/alpinelinux/aports/tree/fbf60319be3bbaf6dd32ef55cc6fb7189e05c266/main/gcc",
+      "source_url": "https://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.xz"
+    },
+    {
+      "name": "libstdc++",
+      "version": "14.2.0-r6",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libstdc++-14.2.0-r6.apk",
+      "sha256": "939f7c99898f3e8154207a17f4acbe8bc40437e1bb1b43f5525620ca9e452a2e",
+      "archive": "apk",
+      "files": [
+        "libstdc++.so.6.0.33"
+      ],
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later",
+      "alpine_commit": "fbf60319be3bbaf6dd32ef55cc6fb7189e05c266",
+      "source_recipe": "https://github.com/alpinelinux/aports/tree/fbf60319be3bbaf6dd32ef55cc6fb7189e05c266/main/gcc",
+      "source_url": "https://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.xz"
+    }
+  ]
+}
