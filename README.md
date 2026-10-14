@@ -15,7 +15,7 @@
 | OpenCode | 1.19.0 官方 linux-x64-musl 构建 |
 | LLM | 百炼 `deepseek-v4.1-flash` |
 
-已在上述目标机验证版本命令、TUI、乱码修复、真实模型请求和 Bash 工具调用。这不是所有 CentOS 7 配置的兼容性保证。具体证据范围见 [验证记录](docs/VALIDATION.md)。
+已在上述目标机验证版本命令、TUI、乱码修复、真实模型请求和 Bash 工具调用；2026-10-14 用户进一步确认 TUI 中文输入已解决，`Ctrl+Shift+V` 可以粘贴。这不是所有 CentOS 7 配置的兼容性保证。具体证据范围见 [验证记录](docs/VALIDATION.md)。
 
 ## 给另一位实习生：下载与启动
 
@@ -66,6 +66,36 @@ bash "$HOME/opencode-centos7-1.19.0-r1/start.sh" --continue
 
 不带 `--continue` 则按 OpenCode 的默认方式启动。工作目录保持为你执行命令时所在的目录。
 
+### 设置短命令 opencode-centos7
+
+使用本仓库 r1 交接包时，在 **CentOS 普通 Bash 终端**执行一次：
+
+```bash
+cat >> "$HOME/.bashrc" <<'EOF'
+alias opencode-centos7='bash "$HOME/opencode-centos7-1.19.0-r1/start.sh"'
+EOF
+source "$HOME/.bashrc"
+```
+
+如果已经设置过同名 alias，请在 `~/.bashrc` 中修改原定义，避免重复追加。安装位置不同时，应将 alias 内的路径改为自己的实际安装目录。
+
+以后启动和恢复最近的对话只需：
+
+```bash
+opencode-centos7
+opencode-centos7 -c
+```
+
+上面两条是分别使用的命令；恢复对话时执行第二条。alias 保留执行时的工作目录，只缩短启动命令；Base URL 和 API Key 的输入规则仍由 `start.sh` 管理。
+
+本次用户的早期安装目录是 `~/opencode-centos7-1.19.0`，且已配置好百炼连接，使用的短命令定义为：
+
+```bash
+alias opencode-centos7='OPENTUI_FORCE_EXPLICIT_WIDTH=0 "$HOME/opencode-centos7-1.19.0/opencode"'
+```
+
+该定义复用现有 OpenCode 配置，不自动使用 r1 包的百炼模板。接收者应按自己安装的版本选择相应定义。
+
 ## 适配方法
 
 - 在包内提供 musl、libgcc、libstdc++，通过包内加载器启动上游二进制。
@@ -80,13 +110,19 @@ bash "$HOME/opencode-centos7-1.19.0-r1/start.sh" --continue
 
 虚拟机需要具备公网访问能力、默认路由和可用 DNS。VMware 的仅主机网络不能单独提供公网访问；可以添加 NAT 网卡，让已有仅主机网卡继续用于本机通信。网关和 DNS 必须按接收者自己的虚拟机配置确定。
 
-终端粘贴通常使用 `Ctrl+Shift+V`。不能输入中文时，可把中文任务保存为 UTF-8 文本文件，然后让 OpenCode 读取文件。例如本包的 `prompts/check-tools.txt`。
+本次目标机已确认：普通终端和 OpenCode TUI 输入框都可以通过 `Ctrl+Shift+V` 粘贴。中文输入需先在 CentOS 本机配置输入法；GNOME 中可添加 `Chinese (Intelligent Pinyin)`，先在 gedit 测试，再在 OpenCode 测试。输入法的配置说明见 [中文输入与粘贴](docs/TROUBLESHOOTING.md#5-粘贴和中文输入)。
+
+这些设置在 CentOS 本机完成，不需要通过 Windows 浏览器输入。暂时不能直接输入中文时，也可把任务保存为 UTF-8 文件，再让 OpenCode 读取，例如本包的 `prompts/check-tools.txt`。
+
+中文输入法属于桌面环境依赖，不随本成品包提供；缺少相关软件包时，安装它们需要系统包管理权限。
 
 完整排查步骤见 [故障排查](docs/TROUBLESHOOTING.md)。
 
 ## 源码目录与本地打包
 
 仓库保存启动脚本、通用配置、构建脚本、许可证和说明；大体积成品包放在 Release。
+
+2026-10-14 的更新为使用文档和验证记录修订。已发布的 r1 Release 资产保持原样；下载旧包后，请同时参考仓库中最新的 README 和故障排查说明。
 
 在有网络的构建机上，使用 Python 3.6+：
 
