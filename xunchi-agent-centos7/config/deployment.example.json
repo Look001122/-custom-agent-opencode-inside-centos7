@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "engine": {
+    "launcher": "~/opencode-centos7-1.19.0/opencode",
+    "config": "~/opencode-bailian-v1.json",
+    "required_env": ["DASHSCOPE_API_KEY"]
+  },
+  "project": {
+    "root": "/REPLACE_WITH_PROJECT_DIRECTORY",
+    "pdk_stack": "2P4M",
+    "pdk_library_directory": "/REPLACE_WITH_COMPANY_PDK_LIBRARY",
+    "source": {"library": "SOURCE_LIB", "cell": "SOURCE_CELL", "view": "schematic"},
+    "target": {"library": "WORK_COPY_LIB", "cell": "LAYOUT_CELL", "view": "layout", "library_directory": "/REPLACE_WITH_WORK_COPY_LIBRARY"}
+  },
+  "eda_environment_script": "/REPLACE_WITH_COMPANY_APPROVED_EDA_ENV.sh",
+  "actions": {}
+}

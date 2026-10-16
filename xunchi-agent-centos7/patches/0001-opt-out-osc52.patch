@@ -1,0 +1,11 @@
+diff --git a/packages/tui/src/clipboard.ts b/packages/tui/src/clipboard.ts
+--- a/packages/tui/src/clipboard.ts
++++ b/packages/tui/src/clipboard.ts
+@@ -23,6 +23,7 @@
+ function writeOsc52(text: string) {
+   if (!process.stdout.isTTY) return
++  if (process.env.XUNCHI_DISABLE_OSC52 === "1") return
+   const sequence = `\x1b]52;c;${Buffer.from(text).toString("base64")}\x07`
+   const passthrough = `\x1bPtmux;\x1b${sequence}\x1b\\`
+   process.stdout.write(process.env.TMUX ? sequence + passthrough : process.env.STY ? passthrough : sequence)
+ }

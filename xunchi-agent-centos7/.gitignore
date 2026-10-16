@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+local/
+runs/
+vendor/
+dist/
+.env
+deployment.json
+*.gds
+*.oa
+*.cdl
+*.log

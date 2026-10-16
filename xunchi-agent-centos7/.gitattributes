@@ -1,0 +1,8 @@
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+# A unified-diff context line intentionally contains a single space.
+*.patch text eol=lf whitespace=-blank-at-eol,-blank-at-eof
+bin/* text eol=lf
+*.tsx text eol=lf
+*.cjs text eol=lf

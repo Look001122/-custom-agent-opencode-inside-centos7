@@ -1,0 +1,14 @@
+{
+  "product": "xunchi-IC-agent",
+  "company_zh": "苏州迅驰信息科技有限公司",
+  "company_en": "Suzhou Xunchi Information Technology Co., Ltd",
+  "subtitle": "集成电路设计助手",
+  "colors": {"cyan": "#2BB3DE", "blue": "#2388BF"},
+  "reference_image": "assets/company-logo.reference.png",
+  "mark_region": [22, 12, 80, 56],
+  "mark_columns": 22,
+  "mark_pixel_rows": 16,
+  "full_layout_min_columns": 76,
+  "mark_min_columns": 58,
+  "placeholders": ["检查当前工程环境", "核对原理图与版图的器件参数", "总结当前验证报告"]
+}

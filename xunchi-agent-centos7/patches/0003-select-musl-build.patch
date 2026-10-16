@@ -1,0 +1,14 @@
+diff --git a/packages/opencode/script/build.ts b/packages/opencode/script/build.ts
+--- a/packages/opencode/script/build.ts
++++ b/packages/opencode/script/build.ts
+@@ -113,7 +113,9 @@
+   },
+ ]
+ 
+-const targets = singleFlag
++const targets = process.env.XUNCHI_BUILD_TARGET === "linux-x64-musl"
++  ? allTargets.filter((item) => item.os === "linux" && item.arch === "x64" && item.abi === "musl" && item.avx2 !== false)
++  : singleFlag
+   ? allTargets.filter((item) => {
+       if (item.os !== process.platform || item.arch !== process.arch) {
+         return false

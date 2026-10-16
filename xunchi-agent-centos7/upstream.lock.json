@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/anomalyco/opencode",
+  "tag": "v1.19.0",
+  "commit": "733b2c627e5aec39cb33cc22373bdce33053ef2c",
+  "existing_engine": "official linux-x64-musl binary with private CentOS 7 compatibility runtime",
+  "patch_status": "brand.3 source and terminal transport published; user confirmed CentOS exit fix and existing Virtuoso control; clipboard source patch not compiled",
+  "branding_release": "0.1.0-brand.3",
+  "product_version": "0.1.0-dev.1"
+}

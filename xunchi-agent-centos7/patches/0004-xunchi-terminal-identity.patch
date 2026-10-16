@@ -1,0 +1,87 @@
+diff --git a/packages/tui/src/app.tsx b/packages/tui/src/app.tsx
+--- a/packages/tui/src/app.tsx
++++ b/packages/tui/src/app.tsx
+@@ -442,24 +442,24 @@
+     if (!terminalTitleEnabled() || Flag.OPENCODE_DISABLE_TERMINAL_TITLE) return
+ 
+     if (route.data.type === "home") {
+-      renderer.setTerminalTitle("OpenCode")
++      renderer.setTerminalTitle("XunChi")
+       return
+     }
+ 
+     if (route.data.type === "session") {
+       const session = sync.session.get(route.data.sessionID)
+       if (!session || isDefaultTitle(session.title)) {
+-        renderer.setTerminalTitle("OpenCode")
++        renderer.setTerminalTitle("XunChi")
+         return
+       }
+ 
+       const title = session.title.length > 40 ? session.title.slice(0, 37) + "…" : session.title
+-      renderer.setTerminalTitle(`OC | ${title}`)
++      renderer.setTerminalTitle(`XunChi | ${title}`)
+       return
+     }
+ 
+     if (route.data.type === "plugin") {
+-      renderer.setTerminalTitle(`OC | ${route.data.id}`)
++      renderer.setTerminalTitle(`XunChi | ${route.data.id}`)
+     }
+   })
+ 
+diff --git a/packages/tui/src/util/presentation.ts b/packages/tui/src/util/presentation.ts
+--- a/packages/tui/src/util/presentation.ts
++++ b/packages/tui/src/util/presentation.ts
+@@ -1,38 +1,15 @@
+-const logo = {
+-  left: ["                   ", "█▀▀█ █▀▀█ █▀▀█ █▀▀▄", "█__█ █__█ █^^^ █__█", "▀▀▀▀ █▀▀▀ ▀▀▀▀ ▀~~▀"],
+-  right: ["             ▄     ", "█▀▀▀ █▀▀█ █▀▀█ █▀▀█", "█___ █__█ █__█ █^^^", "▀▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀▀"],
+-}
+-
+ const reset = "\x1b[0m"
+ const bold = "\x1b[1m"
+ const dim = "\x1b[90m"
+-
+-function wordmark(pad = "") {
+-  const draw = (line: string, fg: string, shadow: string, bg: string) =>
+-    [...line]
+-      .map((char) => {
+-        if (char === "_") return `${bg} ${reset}`
+-        if (char === "^") return `${fg}${bg}▀${reset}`
+-        if (char === "~") return `${shadow}▀${reset}`
+-        if (char === " ") return " "
+-        return `${fg}${char}${reset}`
+-      })
+-      .join("")
+-
+-  return logo.left.map((line, index) => {
+-    const left = draw(line, dim, "\x1b[38;5;235m", "\x1b[48;5;235m")
+-    const right = draw(logo.right[index] ?? "", reset, "\x1b[38;5;238m", "\x1b[48;5;238m")
+-    return `${pad}${left} ${right}`
+-  })
+-}
++const cyan = "\x1b[36m"
+ 
+ export function sessionEpilogue(input: { title: string; sessionID?: string }) {
+   const weak = (text: string) => `${dim}${text.padEnd(10, " ")}${reset}`
+   return [
+-    ...wordmark("  "),
++    `  ${cyan}${bold}XunChi${reset}`,
+     "",
+     `  ${weak("Session")}${bold}${input.title}${reset}`,
+-    `  ${weak("Continue")}${bold}opencode -s ${input.sessionID}${reset}`,
++    `  ${weak("Continue")}${bold}xunchi-agent-centos7 ${input.sessionID ? `-s ${input.sessionID}` : "-c"}${reset}`,
+     "",
+   ].join("\n")
+ }
+diff --git a/packages/tui/test/util/presentation.test.ts b/packages/tui/test/util/presentation.test.ts
+--- a/packages/tui/test/util/presentation.test.ts
++++ b/packages/tui/test/util/presentation.test.ts
+@@ -4,5 +4,5 @@
+ test("formats session continuation summary", () => {
+   const epilogue = sessionEpilogue({ title: "A session", sessionID: "ses_123" })
+   expect(epilogue).toContain("A session")
+-  expect(epilogue).toContain("opencode -s ses_123")
++  expect(epilogue).toContain("xunchi-agent-centos7 -s ses_123")
+ })

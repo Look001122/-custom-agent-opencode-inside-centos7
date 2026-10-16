@@ -2,7 +2,15 @@
 
 在 CentOS 7 中运行 OpenCode 1.19.0，并通过阿里云百炼接入 DeepSeek LLM。
 
-这是 OpenCode 的**兼容适配和部署工具包**：使用上游原始 musl 二进制、独立运行库和启动脚本。OpenCode 原始二进制保持不变。上游项目：[anomalyco/opencode](https://github.com/anomalyco/opencode)。
+仓库保留原有 **r1 兼容适配工具包**：使用上游原始 musl 二进制、独立运行库和启动脚本；r1 的二进制保持不变。另新增基于固定版本源码定制的 **XunChi 开发目录**。上游项目：[anomalyco/opencode](https://github.com/anomalyco/opencode)。
+
+## 2026-10-16 更新：XunChi
+
+新增 [xunchi-agent-centos7](xunchi-agent-centos7/)：公司启动页、`XunChi` 窗口标题和退出摘要、`xunchi-agent-centos7` 启动入口、旧终端协议过滤、用户级安装/校验/备份/回退，以及相关测试和构建补丁。
+
+用户已在目标 CentOS 7 确认：公司启动页和标题生效、退出后不再出现乱码，并可通过 agent 操控现有 Virtuoso 环境。开发环境全部 23 项 Python 测试通过，真实 TUI 中文粘贴及退出恢复检查通过。证据和边界见 [2026-10-16 更新记录](docs/UPDATES_20261016.md)。
+
+本次公开的是源码、补丁、测试、模板和说明。公司内部品牌成品包没有附在本次 GitHub 更新中，`brand.3` 不在旧 r1 Release 里。已有内部包按 [安装说明](xunchi-agent-centos7/docs/INSTALL_BRANDING.md) 更新；源码开发见 [构建说明](xunchi-agent-centos7/docs/BUILD.md)。
 
 ## 已验证的目标环境
 
@@ -136,7 +144,7 @@ GitHub Actions 在发布工作流首次上传时自动构建，并发布 `v1.19.
 
 ## 当前范围
 
-本包交付 OpenCode、终端兼容设置和百炼接入模板。`virtuoso-bridge-lite` 尚未在该目标机安装，Virtuoso 控制和 layout 绘制不在已完成验收范围内。
+原 r1 包交付 OpenCode、终端兼容设置和百炼模板。2026-10-16 用户已确认其现有 agent 环境可操控 Virtuoso；这项反馈不代表本仓库已打包或自动配置 bridge、Cadence、Calibre、PDK、许可证服务或设计工程，也不代表任意版图任务均通过 DRC/LVS。新接收者仍需单独配置自己的 EDA 环境。
 
 ## 许可证与来源
 

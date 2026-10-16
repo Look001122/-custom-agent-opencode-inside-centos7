@@ -1,6 +1,6 @@
 # Third-party software and source access
 
-This kit keeps the upstream executable and runtime libraries unmodified.
+The original r1 kit keeps the upstream executable and runtime libraries unmodified.
 The repository's MIT license covers the added scripts and documentation;
 each third-party component retains its upstream license.
 
@@ -29,3 +29,15 @@ alongside the binaries in `sources.lock.json` and `SOURCES.json`.
 
 The build script downloads prebuilt, hash-checked upstream components;
 it packages them without recompilation or binary patching.
+
+## XunChi source customization
+
+The `xunchi-agent-centos7/` directory contains source modifications against a
+pinned OpenCode commit, deployment helpers and tests. A rebuilt XunChi engine
+is a modified OpenCode executable, unlike the original r1 kit. This repository
+update does not include that internal binary bundle. Preserve OpenCode's MIT
+notice and all applicable runtime notices when assembling one.
+
+Company logos and derived branding graphics retain their respective ownership;
+the code license does not grant company trademark or brand identity rights.
+See `xunchi-agent-centos7/THIRD_PARTY_NOTICES.md` and `assets/NOTICE.md` there.

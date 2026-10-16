@@ -1,0 +1,12 @@
+{
+  "reference_sha256": "04ea44ad1528cbc6e2e3cb4ae9eb9e0cbb39f5ac9a67365a79e7d19a021dd78d",
+  "mark_region": [
+    22,
+    12,
+    80,
+    56
+  ],
+  "terminal_rendition": "two-color half-block approximation; not a replacement original logo",
+  "source_patch": "0002-xunchi-home-branding.patch",
+  "deployment_status": "user_confirmed_on_centos7_20261016"
+}

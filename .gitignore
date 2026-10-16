@@ -10,3 +10,8 @@ auth.json
 state.json
 config/local*.json
 config/local*.jsonc
+BUILD.local.json
+*.gds
+*.oa
+*.cdl
+*.log
