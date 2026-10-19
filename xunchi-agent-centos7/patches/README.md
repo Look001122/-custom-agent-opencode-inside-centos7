@@ -15,3 +15,7 @@
 正式流程：检出锁定提交 → 检查并应用补丁 → 在构建机编译 musl 目标 → 组合兼容运行库 → 在 CentOS 7 上检查中文、复制、粘贴与回归任务 → 版本化发布。
 
 `0004-xunchi-terminal-identity.patch` 将窗口标题、退出摘要和恢复入口改为 XunChi。brand.3 的终端修复位于 `deploy/terminal_compat.py`，复用 brand.2 引擎，无需再编译该兼容层。用户已确认退出不再出现乱码。
+
+`0005-xunchi-connections.patch` 是可选连接管理分支，配合 `deploy/launch.py`、`connections.py` 和 `start-connections.sh` 使用；不要求既有用户切换连接方式。
+
+`0006-xunchi-product-identity.patch` 统一 XunChi Agent 品牌和产品身份、增加 `/about`，保留引擎/协议/模型的技术标识。0.1.1 legacy 按 0002 → 0003 → 0004 → 0006 应用；managed 再应用 0005。0001 仍未编译进这些内部引擎。

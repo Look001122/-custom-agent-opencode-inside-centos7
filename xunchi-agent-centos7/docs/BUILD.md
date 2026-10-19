@@ -1,5 +1,7 @@
 # 构建 XunChi 定制版本
 
+**2026-10-19 当前入口：** XunChi Agent 0.1.1 的两种引擎、身份升级包及可选连接分支见 [BUILD_IDENTITY.md](BUILD_IDENTITY.md)。下方保留原 brand.3 流程，原安装器和构建脚本没有被连接管理分支覆盖。历史构建摘要不能作为新构建的验收记录。
+
 公开目录是源码、补丁和测试，不含可运行的 brand.3 成品。旧的 r1 Release 不包含公司品牌或新的 PTY 兼容层。已有内部成品的使用者见 `INSTALL_BRANDING.md`；该说明中的共享目录不是 GitHub 下载地址。
 
 ## 开发环境

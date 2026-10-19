@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Run process, installer and terminal tests
+      - name: Run process, connection, upgrade and terminal tests
         run: python3 -m unittest discover -s xunchi-agent-centos7/tests -v
       - name: Check deployment syntax for Python 3.6
         run: |
@@ -30,3 +30,8 @@ jobs:
           for path in Path("xunchi-agent-centos7/deploy").glob("*.py"):
               ast.parse(path.read_text(encoding="utf-8"), filename=str(path), feature_version=(3, 6))
           PY
+      - name: Check build and installation shell syntax
+        run: |
+          for file in xunchi-agent-centos7/deploy/*.sh xunchi-agent-centos7/tools/*.sh; do
+            bash -n "$file"
+          done

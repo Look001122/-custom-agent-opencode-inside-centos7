@@ -1,0 +1,124 @@
+{
+  "product": "xunchi-IC-agent",
+  "release": "0.2.0-connections.1",
+  "date": "2026-10-19",
+  "upstream_commit": "733b2c627e5aec39cb33cc22373bdce33053ef2c",
+  "engine_version": "1.19.0",
+  "target": "linux-x64-musl",
+  "engine_sha256": "517f131909619e47fb8ab1ad986b47d9c6bbb01df49f48f840499ecf6be22275",
+  "source_archive_sha256": "ab433f7a5fc9e54c90da18bd3457298009f426424805f043aa32c03543b4a192",
+  "bun_version": "1.3.14",
+  "bun_zip_sha256": "951ee2aee855f08595aeec6225226a298d3fea83a3dcd6465c09cbccdf7e848f",
+  "models_snapshot_sha256": "4f9c4dae7f80f6b9e81f3b8c6364528196052168bf6f2e565041d800dfa203d0",
+  "patches": {
+    "0002-xunchi-home-branding.patch": "82b73dc0937ac509731cb6a885a517bb365630bd839f8bb2e853ab32f7d90d9e",
+    "0003-select-musl-build.patch": "f3104ec1b71ee39b30631a0929cf1c75b54fda31374dce232e20d1c4825cdab0",
+    "0004-xunchi-terminal-identity.patch": "cebffae5593badf11c4e2db5c1599cef6490400ab0ead7750f2509b81f6b98d7",
+    "0005-xunchi-connections.patch": "cdaed2f662c2220b81045ce27dbb65e9ca1c0831fba4dd5bd6fa87ba1908e3db"
+  },
+  "branding": {
+    "product": "xunchi-IC-agent",
+    "company_zh": "苏州迅驰信息科技有限公司",
+    "company_en": "Suzhou Xunchi Information Technology Co., Ltd",
+    "subtitle": "集成电路设计助手",
+    "colors": {
+      "cyan": "#2BB3DE",
+      "blue": "#2388BF"
+    },
+    "reference_image": "assets/company-logo.reference.png",
+    "mark_region": [
+      22,
+      12,
+      80,
+      56
+    ],
+    "mark_columns": 22,
+    "mark_pixel_rows": 16,
+    "full_layout_min_columns": 76,
+    "mark_min_columns": 58,
+    "placeholders": [
+      "检查当前工程环境",
+      "核对原理图与版图的器件参数",
+      "总结当前验证报告"
+    ]
+  },
+  "clipboard_patch_applied": false,
+  "tui_typecheck": "passed",
+  "wsl_version_test": {
+    "returncode": 0,
+    "stdout": "1.19.0\n",
+    "stderr": ""
+  },
+  "wsl_tui_test": {
+    "environment": "WSL Ubuntu; not CentOS 7",
+    "prompts_submitted": 0,
+    "brand_visible": true,
+    "english_without_trailing_period": true,
+    "terminal_title": "XunChi",
+    "terminal_title_passed": true
+  },
+  "centos7_validation": "pending for this connection-manager release",
+  "llm_request": "loopback fixture only; external accounts not used",
+  "license_sources": "sources.lock.json and licenses/",
+  "terminal_identity": {
+    "home_title": "XunChi",
+    "session_title": "XunChi | <session title>",
+    "exit_brand": "XunChi",
+    "resume_command": "xunchi-agent-centos7"
+  },
+  "terminal_probe_changes": true,
+  "exit_summary_existing_test": "passed",
+  "installer_integration_tests": "4 passed",
+  "engine_change": "Integrated Chinese connection manager with private per-user storage",
+  "terminal_compat": {
+    "default_profile": "legacy-vte",
+    "source_sha256": "d83e0d89cfbfb8a152db73b51fe93f335bb9125632506c0aaaec20372ec7ead1",
+    "tests": "5 passed",
+    "all_project_tests": "23 passed",
+    "python_3_6": "syntax checked; target runtime not tested",
+    "osc52": "disabled in legacy profile; native clipboard not tested",
+    "wsl_tui_test": {
+      "environment": "WSL tmux; not CentOS 7 VTE",
+      "llm_prompts_submitted": 0,
+      "home_visible": true,
+      "title": "XunChi",
+      "chinese_paste_visible": true,
+      "normal_exit": true,
+      "tty_restored": true,
+      "unsupported_probe_output_absent": true
+    }
+  },
+  "connection_management": {
+    "tests": "31 Python tests passed; TUI typecheck passed",
+    "ui_acceptance": {
+      "environment": "WSL tmux; CentOS 7 pending",
+      "external_model_requests": 0,
+      "first_run_without_key_prompt": true,
+      "secret_not_rendered": true,
+      "saved_default_and_private_key": true,
+      "configured_model_visible": true,
+      "actual_agent_loopback_stream_and_auth": true,
+      "ui_chat_and_tool_tests": true,
+      "exit_tty_and_session_cleanup": true,
+      "loopback_requests": [
+        "agent-stream",
+        "agent-stream",
+        "chat",
+        "tools"
+      ],
+      "restart_uses_saved_default_without_prompt": true
+    },
+    "protocols": [
+      "OpenAI compatible chat completions",
+      "OpenAI Responses",
+      "Anthropic Messages"
+    ],
+    "real_provider_acceptance": "not tested",
+    "credentials_packaged": false,
+    "runtime_files": {
+      "connections.py": "542504f92c0a943882df46dd2c0e15374d9c6d05e96eebeaf69706718d6636f8",
+      "launch.py": "0a109d4eaffcfcd8417b11766608d9dab9b9d9db092675313f202b8dc763e17f",
+      "start.sh": "01e9f383c13d9752eee4663699e33d2bf51bd33b98813dc76f3112b088e5cbb0"
+    }
+  }
+}

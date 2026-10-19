@@ -4,6 +4,14 @@
 
 仓库保留原有 **r1 兼容适配工具包**：使用上游原始 musl 二进制、独立运行库和启动脚本；r1 的二进制保持不变。另新增基于固定版本源码定制的 **XunChi 开发目录**。上游项目：[anomalyco/opencode](https://github.com/anomalyco/opencode)。
 
+## 2026-10-19 更新：XunChi Agent 0.1.1
+
+产品名称统一为 **XunChi Agent**，覆盖首页、窗口、侧栏、帮助、退出摘要及助手身份提示。新增 `/about`，分别展示产品版本、OpenCode 来源和当前模型。升级器按现有启动方式选择对应引擎，复用原启动脚本及终端兼容层，保留当前 provider/model 配置。
+
+同时保存当天已完成的多连接管理开发源码：支持中文配置、三类接口、独立凭据及显式测试。这是可选开发分支；品牌升级不会要求切换到新的连接方式。
+
+本次公开源码、补丁、测试及内部构建的历史验证摘要，未上传新的公司品牌二进制。旧 r1 Release 保持原样。开发机及模拟接口检查不等于新版 CentOS 7、真实 DeepSeek 或 Virtuoso 验收。详见 [今日更新](docs/UPDATES_20261019.md)、[身份升级说明](xunchi-agent-centos7/docs/IDENTITY.md)和[构建说明](xunchi-agent-centos7/docs/BUILD.md)。
+
 ## 2026-10-16 更新：XunChi
 
 新增 [xunchi-agent-centos7](xunchi-agent-centos7/)：公司启动页、`XunChi` 窗口标题和退出摘要、`xunchi-agent-centos7` 启动入口、旧终端协议过滤、用户级安装/校验/备份/回退，以及相关测试和构建补丁。

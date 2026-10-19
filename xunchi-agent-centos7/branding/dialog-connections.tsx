@@ -1,0 +1,227 @@
+import { InputRenderable } from "@opentui/core"
+import { createSignal, onMount } from "solid-js"
+import { DialogSelect } from "../ui/dialog-select"
+import { DialogPrompt } from "../ui/dialog-prompt"
+import { useDialog, type DialogContext } from "../ui/dialog"
+import { useTheme } from "../context/theme"
+import { useSDK } from "../context/sdk"
+import { useSync } from "../context/sync"
+import { useLocal } from "../context/local"
+import { useToast } from "../ui/toast"
+
+type Profile = {
+  id: string
+  name: string
+  protocol: string
+  baseURL: string
+  models: string[]
+  model: string
+  credential_mode: string
+  ready: boolean
+}
+type State = { profiles: Profile[]; active: string | null; default: string | null }
+type Reply = State & { models?: string[]; passed?: boolean; message?: string }
+const [connections, setConnections] = createSignal<State>({ profiles: [], active: null, default: null })
+let onboarded = false
+
+export function managedConnections() {
+  return !!process.env.XUNCHI_CONNECTIONS_BACKEND
+}
+
+async function backend(action: string, request: Record<string, unknown> = {}): Promise<Reply> {
+  const processHandle = Bun.spawn(
+    [process.env.XUNCHI_CONNECTIONS_PYTHON || "python3", process.env.XUNCHI_CONNECTIONS_BACKEND!, action],
+    { stdin: "pipe", stdout: "pipe", stderr: "pipe" },
+  )
+  processHandle.stdin.write(JSON.stringify(request))
+  processHandle.stdin.end()
+  const [output, code] = await Promise.all([new Response(processHandle.stdout).text(), processHandle.exited])
+  if (code !== 0) throw new Error("连接管理进程未完成；请检查安装文件")
+  const result = JSON.parse(output) as { ok: boolean; data: Reply; error?: string }
+  if (!result.ok) throw new Error(result.error || "连接操作失败")
+  if (result.data.profiles) setConnections(result.data)
+  return result.data
+}
+
+function choose<T extends string>(dialog: DialogContext, title: string, options: { title: string; value: T; description?: string }[]) {
+  return new Promise<T | null>((resolve) => {
+    dialog.replace(
+      () => <DialogSelect title={title} options={options} onSelect={(option) => resolve(option.value)} />,
+      () => resolve(null),
+    )
+  })
+}
+
+function Secret(props: { submit: (key: string) => void }) {
+  const { theme } = useTheme()
+  const [secret, setSecret] = createSignal("")
+  let input: InputRenderable
+  onMount(() => setTimeout(() => input.focus(), 1))
+  return (
+    <box padding={2} gap={1}>
+      <text fg={theme.text}>输入 API Key（隐藏显示）</text>
+      <text fg={theme.textMuted}>Enter 确认 · Esc 取消 · Ctrl+U 清空</text>
+      <input
+        ref={(value) => (input = value)}
+        value={"*".repeat(secret().length)}
+        onKeyDown={(key) => {
+          if (key.name === "escape") return
+          key.preventDefault()
+          key.stopPropagation()
+          if (key.name === "return") return props.submit(secret())
+          if (key.ctrl && key.name === "u") return setSecret("")
+          if (key.name === "backspace" || key.name === "delete") return setSecret((value) => value.slice(0, -1))
+          if (!key.ctrl && !key.meta && /^[\x21-\x7e]+$/.test(key.sequence)) setSecret((value) => value + key.sequence)
+        }}
+        onPaste={(event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          const value = new TextDecoder().decode(event.bytes).trim()
+          if (/^[\x21-\x7e]+$/.test(value)) setSecret((old) => old + value)
+        }}
+      />
+      <text fg={theme.textMuted}>已输入 {secret().length} 个字符；密钥不会显示在对话或命令行参数中</text>
+    </box>
+  )
+}
+
+function askSecret(dialog: DialogContext) {
+  return new Promise<string | null>((resolve) => {
+    dialog.replace(() => <Secret submit={resolve} />, () => resolve(null))
+  })
+}
+
+export function DialogConnections() {
+  const dialog = useDialog()
+  const sdk = useSDK()
+  const sync = useSync()
+  const local = useLocal()
+  const toast = useToast()
+  const [loading, setLoading] = createSignal(true)
+  onMount(() => {
+    backend("state").catch(toast.error).finally(() => setLoading(false))
+  })
+  const home = () => dialog.replace(() => <DialogConnections />)
+
+  async function refresh(action: string, request: Record<string, unknown>) {
+    if (Object.values(sync.data.session_status).some((status) => status.type !== "idle"))
+      throw new Error("请等待正在运行的 agent 任务结束后，再保存或切换模型连接")
+    await backend(action, request)
+    await sdk.client.instance.dispose()
+    await sync.bootstrap()
+    const profile = connections().profiles.find((item) => item.id === connections().active)
+    if (profile?.ready) local.model.set({ providerID: profile.id, modelID: profile.model }, { recent: true })
+  }
+
+  async function edit(old?: Profile) {
+    const name = await DialogPrompt.show(dialog, "连接名称", { value: old?.name, placeholder: "我的百炼 / 公司服务 / 个人中转" })
+    if (name === null) return
+    const protocol = await choose(dialog, "选择接口类型", [
+      { title: "OpenAI 兼容 · Chat Completions", value: "chat", description: "百炼、常见中转站及本机兼容服务" },
+      { title: "OpenAI Responses", value: "responses" },
+      { title: "Anthropic Messages", value: "anthropic" },
+    ])
+    if (!protocol) return
+    const baseURL = await DialogPrompt.show(dialog, "API 地址（完整 Base URL）", { value: old?.baseURL, placeholder: "https://your-service.example/v1" })
+    if (baseURL === null) return
+    const credentialMode = await choose(dialog, "密钥保存方式", [
+      ...(old?.ready ? [{ title: "保留现有密钥设置", value: "keep" }] : []),
+      { title: "在本机记住密钥", value: "saved", description: "私有文件权限 0600；本地明文保存" },
+      { title: "仅本次运行", value: "session", description: "保存在私有临时目录，正常退出后删除" },
+      { title: "此服务无需密钥", value: "none", description: "例如本机模型服务" },
+    ])
+    if (!credentialMode) return
+    const key = credentialMode === "saved" || credentialMode === "session" ? await askSecret(dialog) : ""
+    if (key === null) return
+    const model = await DialogPrompt.show(dialog, "默认模型 ID", { value: old?.model, placeholder: "填写服务商提供的准确模型 ID；保存后可获取模型列表" })
+    if (model === null) return
+    const mode = await choose(dialog, "保存连接", [
+      { title: "保存并设为默认", value: "default", description: "以后直接启动此连接" },
+      { title: "保存并仅本次使用", value: "session" },
+    ])
+    if (!mode) return
+    await refresh("save", { id: old?.id, name, protocol, baseURL, credential_mode: credentialMode, key,
+      model, models: [...(old?.models || []), model], default: mode === "default" })
+    toast.show({ message: "连接已保存；可在菜单中测试对话和工具调用", variant: "success" })
+    home()
+  }
+
+  async function details(profile: Profile) {
+    const action = await choose(dialog, `${profile.name} · ${profile.model}`, [
+      { title: "使用此连接（本次）", value: "select" },
+      { title: "设为默认并使用", value: "default" },
+      { title: "编辑连接 / 更新密钥", value: "edit" },
+      { title: "获取模型列表", value: "models", description: "发送一次 GET /models；不支持时可手动编辑模型 ID" },
+      { title: "测试普通对话", value: "chat", description: "发送一次小型模型请求" },
+      { title: "测试工具调用格式", value: "tools", description: "发送一次请求，不执行工具；图像能力需另行验收" },
+      { title: "删除连接", value: "delete" },
+    ])
+    if (!action) return
+    if (action === "edit") return edit(profile)
+    if (action === "models" || action === "chat" || action === "tools") {
+      dialog.replace(() => <DialogSelect title="正在连接服务…" options={[]} locked />)
+      const result = await backend(action === "models" ? "models" : "test", { id: profile.id, kind: action })
+      if (action === "models") {
+        const model = await choose(dialog, "选择默认模型", (result.models || []).map((id) => ({ title: id, value: id })))
+        if (!model) return
+        await refresh("save", { ...profile, model, models: result.models, credential_mode: "keep", default: connections().default === profile.id })
+        home()
+      } else dialog.replace(() => <DialogSelect title={result.message!}
+        options={[{ title: "返回连接管理", value: "back" }]} onSelect={home} />)
+      return
+    }
+    if (action === "delete") {
+      const confirm = await choose(dialog, "删除连接及其保存的密钥？", [{ title: "取消", value: "cancel" }, { title: "确认删除", value: "delete" }])
+      if (confirm !== "delete") return home()
+    }
+    await refresh(action, { id: profile.id })
+    home()
+  }
+
+  function handle(promise: Promise<unknown>) {
+    promise.catch((error) => {
+      dialog.replace(() => <DialogSelect title="连接操作未完成"
+        options={[{ title: error instanceof Error ? error.message : "请检查配置后重试", value: "back", description: "返回连接管理" }]}
+        onSelect={home} />)
+    })
+  }
+
+  return (
+    <DialogSelect
+      title={loading() ? "正在读取模型连接…" : "XunChi · 模型连接"}
+      placeholder="搜索连接；Esc 返回首页"
+      options={[
+        { title: "+ 添加模型连接", value: "__add" },
+        ...connections().profiles.map((profile) => ({ title: profile.name, value: profile.id,
+          description: `${profile.model}${profile.ready ? "" : " · 需要配置密钥"}${profile.id === connections().default ? " · 默认" : ""}` })),
+      ]}
+      onSelect={(option) => handle(option.value === "__add" ? edit() : details(connections().profiles.find((p) => p.id === option.value)!))}
+    />
+  )
+}
+
+export function ConnectionStatus() {
+  const dialog = useDialog()
+  const toast = useToast()
+  const local = useLocal()
+  const sync = useSync()
+  const { theme } = useTheme()
+  onMount(() => {
+    if (!managedConnections()) return
+    backend("state").then((state) => {
+      const active = state.profiles.find((p) => p.id === state.active)
+      if (!onboarded && (!active || !active.ready)) {
+        onboarded = true
+        dialog.replace(() => <DialogConnections />)
+      }
+    }).catch(toast.error)
+  })
+  const label = () => {
+    const model = local.model.current()
+    const provider = sync.data.provider.find((p) => p.id === model?.providerID)
+    return provider ? `${provider.name} · ${model?.modelID}` : "尚未配置可用连接"
+  }
+  return <text fg={theme.textMuted} onMouseUp={() => dialog.replace(() => <DialogConnections />)}>
+    {label()} · 模型连接 /connections
+  </text>
+}

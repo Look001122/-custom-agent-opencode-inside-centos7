@@ -1,0 +1,82 @@
+{
+  "product": "XunChi Agent",
+  "product_version": "0.1.1",
+  "release": "0.1.1-identity.1",
+  "date": "2026-10-19",
+  "upstream_commit": "733b2c627e5aec39cb33cc22373bdce33053ef2c",
+  "engine_version": "1.19.0",
+  "source_archive_sha256": "ab433f7a5fc9e54c90da18bd3457298009f426424805f043aa32c03543b4a192",
+  "target": "linux-x64-musl",
+  "bun_version": "1.3.14",
+  "patches": {
+    "0002-xunchi-home-branding.patch": "82b73dc0937ac509731cb6a885a517bb365630bd839f8bb2e853ab32f7d90d9e",
+    "0003-select-musl-build.patch": "f3104ec1b71ee39b30631a0929cf1c75b54fda31374dce232e20d1c4825cdab0",
+    "0004-xunchi-terminal-identity.patch": "cebffae5593badf11c4e2db5c1599cef6490400ab0ead7750f2509b81f6b98d7",
+    "0005-xunchi-connections.patch": "cdaed2f662c2220b81045ce27dbb65e9ca1c0831fba4dd5bd6fa87ba1908e3db",
+    "0006-xunchi-product-identity.patch": "975c06b4d68f78466c58dfd8ad20e0a4d1263ff7cdfda439e0b085b4063038ae"
+  },
+  "patch_order": {
+    "legacy": [
+      "0002",
+      "0003",
+      "0004",
+      "0006"
+    ],
+    "managed": [
+      "0002",
+      "0003",
+      "0004",
+      "0006",
+      "0005"
+    ]
+  },
+  "engines": {
+    "legacy": "2ea7a8cea28130bbd79ddc9b2f5ab61f334966deed824eaf472ae34991963075",
+    "managed": "c1c03450480ab25c8daee777ed331222a033255defc16ff93516874be376d9d1"
+  },
+  "typecheck": {
+    "tui_legacy": "passed",
+    "opencode": "passed",
+    "tui_managed": "passed"
+  },
+  "wsl_compiled_tests": {
+    "legacy": {
+      "environment": "WSL Ubuntu / tmux; CentOS 7 not tested",
+      "mode": "legacy",
+      "external_model_requests": 0,
+      "real_model_answer_validated": false,
+      "cli_help_product_brand": true,
+      "build_plan_custom_agent_and_model_prompt_identity": true,
+      "resumed_session_system_identity": true,
+      "actual_read_tool_roundtrip_and_file_unchanged": true,
+      "home_product_version_and_title": true,
+      "about_provenance_and_actual_model": true,
+      "help_chinese_paste_exit_and_tty_restore": true,
+      "restored_session_sidebar_brand": true,
+      "exit_brand_and_resume_command": true,
+      "loopback_requests": 10
+    },
+    "managed": {
+      "environment": "WSL Ubuntu / tmux; CentOS 7 not tested",
+      "mode": "managed",
+      "external_model_requests": 0,
+      "real_model_answer_validated": false,
+      "cli_help_product_brand": true,
+      "build_plan_custom_agent_and_model_prompt_identity": true,
+      "resumed_session_system_identity": true,
+      "actual_read_tool_roundtrip_and_file_unchanged": true,
+      "home_product_version_and_title": true,
+      "about_provenance_and_actual_model": true,
+      "help_chinese_paste_exit_and_tty_restore": true,
+      "restored_session_sidebar_brand": true,
+      "exit_brand_and_resume_command": true,
+      "loopback_requests": 10
+    }
+  },
+  "upgrade_installer_tests": "5 passed",
+  "python_3_6": "deployment syntax checked; target runtime pending",
+  "provider_configuration": "reuse installed launcher and backend bytes; never migrate or change provider/model settings",
+  "centos7_validation": "pending on target machine",
+  "virtuoso_this_release": "not connected or modified",
+  "real_model_answer_validation": "not run; loopback captures outgoing instructions and tests read tool execution only"
+}

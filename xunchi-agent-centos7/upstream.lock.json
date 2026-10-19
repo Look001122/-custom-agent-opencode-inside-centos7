@@ -3,7 +3,9 @@
   "tag": "v1.19.0",
   "commit": "733b2c627e5aec39cb33cc22373bdce33053ef2c",
   "existing_engine": "official linux-x64-musl binary with private CentOS 7 compatibility runtime",
-  "patch_status": "brand.3 source and terminal transport published; user confirmed CentOS exit fix and existing Virtuoso control; clipboard source patch not compiled",
-  "branding_release": "0.1.0-brand.3",
-  "product_version": "0.1.0-dev.1"
+  "patch_status": "connections.1 includes Chinese profile management and legacy terminal transport; WSL loopback UI/install tests passed; CentOS and real provider acceptance pending; clipboard source patch not compiled",
+  "branding_release": "0.2.0-connections.1",
+  "product_version": "0.1.1",
+  "identity_release": "0.1.1-identity.1",
+  "identity_connection_policy": "preserve existing launcher and provider/model configuration; choose matching engine variant"
 }
